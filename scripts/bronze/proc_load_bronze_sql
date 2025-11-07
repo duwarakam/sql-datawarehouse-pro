@@ -1,0 +1,195 @@
+/*
+===============================================================================
+Stored Procedure: Load Bronze Layer (Source -> Bronze)
+===============================================================================
+Script Purpose:
+    This stored procedure loads data into the 'bronze' schema from external CSV files. 
+    It performs the following actions:
+    - Truncates the bronze tables before loading data.
+    - Uses the `BULK INSERT` command to load data from csv Files to bronze tables.
+
+Parameters:
+    None. 
+	  This stored procedure does not accept any parameters or return any values.
+
+Usage Example:
+    EXEC bronze.load_bronze;
+===============================================================================
+*/
+---------------------------------------------------------------------------------------------------------------------------
+------------STORED PROCEDURE 
+---------------------------------------------------------------------------------------------------------------------------
+DROP PROCEDURE IF EXISTS bronze.load_bronze;
+GO
+
+CREATE OR ALTER PROCEDURE bronze.load_bronze
+AS
+BEGIN
+
+    
+   -----batch start & end time calculates how long the procedure tok to perform---
+  DECLARE @start_time DATETIME, @end_time DATETIME, @batch_start_time DATETIME, @batch_end_time DATETIME
+  BEGIN TRY
+    SET @batch_start_time = GETDATE()
+    PRINT'============================================================================'
+    PRINT'LOADING BRONZE LAYER'
+    PRINT'============================================================================'
+
+    PRINT'----------------------------------------------------------------------------'
+    PRINT'LOADING CRM TABLES'
+    PRINT'----------------------------------------------------------------------------'
+
+    ---DEVELOPING SQL LOAD SCRIPTS BULK INSERT--
+
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.crm_cust_info>>>'
+    TRUNCATE TABLE bronze.crm_cust_info --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.crm_cust_infos>>>'
+    BULK INSERT bronze.crm_cust_info
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    ---------------------------------------------------------
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.crm_prd_info>>>'
+    TRUNCATE TABLE bronze.crm_prd_info --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.crm_prd_infos>>>'
+    BULK INSERT bronze.crm_prd_info
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    --------------------------------------------------------
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.crm_sales_details>>>'
+    TRUNCATE TABLE bronze.crm_sales_details --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.crm_sales_details>>>'
+    BULK INSERT bronze.crm_sales_details
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    -------------------------------------------------------------------------------
+
+    PRINT'----------------------------------------------------------------------------'
+    PRINT'LOADING ERP TABLES'
+    PRINT'----------------------------------------------------------------------------'
+
+    -------------------------------------------------------------------------------
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.erp_CUST_AZ12>>>'
+    TRUNCATE TABLE bronze.erp_CUST_AZ12 --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.erp_CUST_AZ12>>>'
+    BULK INSERT bronze.erp_CUST_AZ12
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    ------------------------------------------------------------
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.erp_LOC_A101>>>'
+    TRUNCATE TABLE bronze.erp_LOC_A101 --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.erp_LOC_A101>>>'
+    BULK INSERT bronze.erp_LOC_A101
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    ------------------------------------------------------------
+    SET @start_time = GETDATE();
+
+    PRINT'>>>Trunacating Table:bronze.erp_PX_CAT_G1V2>>>'
+    TRUNCATE TABLE bronze.erp_PX_CAT_G1V2 --EMPTYING THE TABLE--
+
+    PRINT'>>>Inserting Data Into:bronze.erp_PX_CAT_G1V2>>>'
+    BULK INSERT bronze.erp_PX_CAT_G1V2
+    FROM 'C:\Users\duwar\OneDrive\Documents\000000000000sql\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+    WITH(
+        FIRSTROW=2, --CAZ 1ST ROW HAS COULMN NAMES YEH--
+        FIELDTERMINATOR =',', --WHAT DIVIDES THE DATA INTO SEPARATE COULMNS--
+        TABLOCK --LOCKING THE TABLE--
+    );
+
+    SET @end_time = GETDATE();
+    PRINT'>>LOAD DURATION: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+    PRINT'--------'
+
+    ------------------------------------------------------------
+
+    SET @batch_end_time=GETDATE();
+        PRINT'=============================================================='
+        PRINT'LOADING COMPLETED AT BRONZE LAYER'
+        PRINT'total duration: ' + CAST (DATEDIFF(SECOND, @batch_start_time, @batch_end_time) AS NVARCHAR) + 'seconds';
+        PRINT'=============================================================='
+
+        -----batch start & end time calculates how long the procedure tok to perform---
+
+  END TRY
+  BEGIN CATCH
+        PRINT'=============================================================='
+        PRINT'ERROR OCURRED DURING BRONZE LAYER'
+        PRINT'ERROR MESSAGE' + ERROR_MESSAGE();
+        PRINT'ERROR MESSAGE' + CAST (ERROR_NUMBER() AS NVARCHAR);
+        PRINT'ERROR MESSAGE' + CAST (ERROR_STATE() AS NVARCHAR);
+        PRINT'=============================================================='
+  END CATCH
+
+END
+
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+--EXECUTING THE STORED PROCEDURE OF THE BRONZE LAYER
+
+EXEC bronze.load_bronze
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
