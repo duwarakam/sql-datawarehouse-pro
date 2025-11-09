@@ -1,7 +1,8 @@
 --======================================================================================--
 --STARTING OFF GOLD LAYER (MAKE SURE TO TAKE CLEANED DATA FROM SILVER LAYER--
 --=====================================================================================--
-=============================
+--=============================
+--QUALITY CHECK FOR GOLD LAYER--
 --CREATES JOINS FOR TABLESRELATED TO CUSTOMER INFORMATION- 
 
 USE DataWareHouse;
