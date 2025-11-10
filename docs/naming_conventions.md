@@ -79,3 +79,4 @@ This document outlines the naming conventions used for schemas, tables, views, c
   - Example: 
     - `load_bronze` → Stored procedure for loading data into the Bronze layer.
     - `load_silver` → Stored procedure for loading data into the Silver layer.
+    
